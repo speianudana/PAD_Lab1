@@ -4,32 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Data
-@Table(name = "CALCULATIONS")
+@Table(name = "Reports")
 
 
-public class Calculation {
+public class Report {
     @Id
-    private Integer id;
+    @GeneratedValue
+    private Long id;
 
     @Column(name = "type")
     private String type;
 
-    @Column(name = "init")
-    private Integer init;
-
     @Column(name = "status")
     private String status;
 
-    @Column(name = "result")
-    private Integer result;
+    @Column(name = "file_download_path")
+    private String fileDownloadPath;
 }
 
