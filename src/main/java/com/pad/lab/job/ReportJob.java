@@ -4,7 +4,6 @@ import com.pad.lab.model.Report;
 import com.pad.lab.repository.ReportRepo;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class ReportJob extends QuartzJobBean {
     ReportRepo reportRepo;
 
     @Override
-    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext jobExecutionContext) {
         logger.info("Executing Job with key {}", jobExecutionContext.getJobDetail().getKey());
 
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
@@ -37,9 +36,10 @@ public class ReportJob extends QuartzJobBean {
             report1.setStatus("generating");
             Report savedReport = reportRepo.save(report1);
             logger.info("Generating Report of type {}", reportType);
-            Thread.sleep(6000L);
+            Thread.sleep(20000L);
             savedReport.setStatus("completed");
             reportRepo.save(savedReport);
+
         } catch (Exception ex) {
             logger.error("Failed to generate report");
         }

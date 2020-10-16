@@ -4,6 +4,8 @@ import com.pad.lab.model.Report;
 import com.pad.lab.payload.ReportStatusRequest;
 import com.pad.lab.payload.ReportStatusResponse;
 import com.pad.lab.repository.ReportRepo;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,9 @@ import javax.validation.Valid;
 public class ReportStatusController {
     @Autowired
     ReportRepo reportRepo;
+
+    @Autowired
+    Scheduler scheduler;
 
     @GetMapping("/getReportStatus")
     public ResponseEntity<ReportStatusResponse> getReportStatus(@RequestParam String id) {
@@ -35,8 +40,12 @@ public class ReportStatusController {
     @GetMapping("/getNumberOfRunningJobs")
     public @ResponseBody
     String getNumberOfGeneratingReports() {
-        long count = reportRepo.findAll().stream().filter(report -> report.getStatus().equals("generating")).count();
-        return "There are " + count + " running processes.";
+        try {
+            long count = scheduler.getCurrentlyExecutingJobs().size();
+            return "There are " + count + " running processes.";
+        } catch (SchedulerException ex) {
+            return "Error processing request!";
+        }
     }
 
     @PutMapping("/putReportStatus")

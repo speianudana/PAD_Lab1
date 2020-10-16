@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
 import java.util.Date;
 import java.util.UUID;
 
-import static org.slf4j.LoggerFactory.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
 public class ReportJobSchedulerController {
@@ -30,6 +29,11 @@ public class ReportJobSchedulerController {
 
 
         try {
+
+            if (scheduler.getCurrentlyExecutingJobs().size() == 5) {
+                ScheduleReportResponse scheduleReportResponse = new ScheduleReportResponse(false, "Error! Maximum job number reached!");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(scheduleReportResponse);
+            }
 
             JobDetail jobDetail = buildJobDetail(scheduleReportRequest);
             Trigger trigger = buildJobTrigger(jobDetail);
