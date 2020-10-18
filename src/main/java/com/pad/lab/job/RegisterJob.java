@@ -20,8 +20,10 @@ public class RegisterJob extends QuartzJobBean {
     private void register() {
         final RestTemplate restTemplate = new RestTemplate();
         try {
-            String address = "http://localhost:8080/";
+
+            String port = System.getProperty("server.port");
             String registerAddress = "http://localhost:4000/register";
+            String address = "localhost:" + port;
             // create headers
             HttpHeaders headers = new HttpHeaders();
             // set `content-type` header
@@ -32,6 +34,7 @@ public class RegisterJob extends QuartzJobBean {
             // create a map for post parameters
             Map<String, Object> map = new HashMap<>();
             map.put("address", address);
+            map.put("service", "reports");
 
             // build the request
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);

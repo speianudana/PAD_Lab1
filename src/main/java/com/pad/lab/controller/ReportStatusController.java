@@ -21,7 +21,7 @@ public class ReportStatusController {
     @Autowired
     Scheduler scheduler;
 
-    @GetMapping("/getReportStatus")
+    @GetMapping("/reports/getReportStatus")
     public ResponseEntity<ReportStatusResponse> getReportStatus(@RequestParam String id) {
 
         try {
@@ -37,7 +37,7 @@ public class ReportStatusController {
         }
     }
 
-    @GetMapping("/getNumberOfRunningJobs")
+    @GetMapping("/reports/getNumberOfRunningJobs")
     public @ResponseBody
     String getNumberOfGeneratingReports() {
         try {
@@ -48,7 +48,7 @@ public class ReportStatusController {
         }
     }
 
-    @PutMapping("/putReportStatus")
+    @PutMapping("/reports/putReportStatus")
     public ResponseEntity<ReportStatusResponse> setReportStatus(@Valid @RequestBody ReportStatusRequest reportStatusRequest) {
 
         try {

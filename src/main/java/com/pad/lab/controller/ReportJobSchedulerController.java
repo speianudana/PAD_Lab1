@@ -24,7 +24,7 @@ public class ReportJobSchedulerController {
     @Autowired
     Scheduler scheduler;
 
-    @PostMapping("/scheduleReport")
+    @PostMapping("/reports/scheduleReport")
     public ResponseEntity<ScheduleReportResponse> scheduleReport(@Valid @RequestBody ScheduleReportRequest scheduleReportRequest) {
 
 
