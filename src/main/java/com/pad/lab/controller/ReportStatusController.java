@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/reports")
 public class ReportStatusController {
     @Autowired
     ReportRepo reportRepo;
@@ -21,7 +22,7 @@ public class ReportStatusController {
     @Autowired
     Scheduler scheduler;
 
-    @GetMapping("/reports/getReportStatus")
+    @GetMapping("/getReportStatus")
     public ResponseEntity<ReportStatusResponse> getReportStatus(@RequestParam String id) {
 
         try {
@@ -37,7 +38,7 @@ public class ReportStatusController {
         }
     }
 
-    @GetMapping("/reports/getNumberOfRunningJobs")
+    @GetMapping("/getNumberOfRunningJobs")
     public @ResponseBody
     String getNumberOfGeneratingReports() {
         try {
@@ -48,7 +49,7 @@ public class ReportStatusController {
         }
     }
 
-    @PutMapping("/reports/putReportStatus")
+    @PutMapping("/putReportStatus")
     public ResponseEntity<ReportStatusResponse> setReportStatus(@Valid @RequestBody ReportStatusRequest reportStatusRequest) {
 
         try {

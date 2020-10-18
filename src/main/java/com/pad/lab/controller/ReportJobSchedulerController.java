@@ -10,23 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.UUID;
 
+import static java.util.Objects.isNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
+@RequestMapping("/reports")
 public class ReportJobSchedulerController {
     private static final Logger logger = getLogger(ReportJobSchedulerController.class);
     @Autowired
     Scheduler scheduler;
 
-    @PostMapping("/reports/scheduleReport")
+    @PostMapping("/scheduleReport")
     public ResponseEntity<ScheduleReportResponse> scheduleReport(@Valid @RequestBody ScheduleReportRequest scheduleReportRequest) {
-
 
         try {
 
@@ -34,9 +36,12 @@ public class ReportJobSchedulerController {
                 ScheduleReportResponse scheduleReportResponse = new ScheduleReportResponse(false, "Error! Maximum job number reached!");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(scheduleReportResponse);
             }
-
+            if (isNull(scheduleReportRequest.getJobPriority())) {
+                scheduleReportRequest.setJobPriority(5);
+            }
             JobDetail jobDetail = buildJobDetail(scheduleReportRequest);
-            Trigger trigger = buildJobTrigger(jobDetail);
+            Trigger trigger = buildJobTrigger(jobDetail, scheduleReportRequest.getJobPriority());
+
             scheduler.scheduleJob(jobDetail, trigger);
 
             ScheduleReportResponse scheduleReportResponse = new ScheduleReportResponse(true, jobDetail.getKey().getName(),
@@ -60,10 +65,11 @@ public class ReportJobSchedulerController {
                 .withDescription("Send Report Job").usingJobData(jobDataMap).storeDurably().build();
     }
 
-    private Trigger buildJobTrigger(JobDetail jobDetail) {
+    private Trigger buildJobTrigger(JobDetail jobDetail, int jobPriority) {
         return TriggerBuilder.newTrigger().forJob(jobDetail)
                 .withIdentity(jobDetail.getKey().getName(), "report-triggers").withDescription("Send Report Trigger")
                 .startAt(new Date())
+                .withPriority(jobPriority)
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow()).build();
     }
 }

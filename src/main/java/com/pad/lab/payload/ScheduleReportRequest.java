@@ -8,6 +8,16 @@ public class ScheduleReportRequest {
     @NotEmpty
     private String reportPath;
 
+    private Integer jobPriority;
+
+    public Integer getJobPriority() {
+        return jobPriority;
+    }
+
+    public void setJobPriority(Integer jobPriority) {
+        this.jobPriority = jobPriority;
+    }
+
     public String getReportPath() {
         return reportPath;
     }
