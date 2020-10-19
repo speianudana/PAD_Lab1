@@ -22,7 +22,7 @@ public class RegisterJob extends QuartzJobBean {
         try {
 
             String port = System.getProperty("server.port");
-            String registerAddress = "http://localhost:4000/register";
+            String registerAddress = "http://gateway:4000/register";
             String address = "localhost:" + port;
             // create headers
             HttpHeaders headers = new HttpHeaders();
